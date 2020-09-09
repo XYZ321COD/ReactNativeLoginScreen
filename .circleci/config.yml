@@ -12,6 +12,9 @@ jobs:
       - run:
           name: jest tests
           command: npm run test
+      - persist_to_workspace:
+          root: ~/ReactNativeLoginScreen
+          paths: node_modules
 
   android:
     working_directory: ~/ReactNativeLoginScreen/android
