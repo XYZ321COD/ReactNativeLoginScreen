@@ -1,0 +1,39 @@
+version: 2
+jobs:
+  node:
+    working_directory: ~/ReactNativeLoginScreen
+    docker:
+      - image: circleci/node:8
+    steps:
+      - checkout
+
+      - run: npm install
+
+      - run:
+          name: jest tests
+          command: npm run test
+      - persist_to_workspace:
+          root: ~/ReactNativeLoginScreen
+          paths: node_modules
+
+  android:
+    working_directory: ~/ReactNativeLoginScreen/android
+    docker:
+      - image: circleci/android:api-27-node8-alpha
+    steps:
+      - checkout:
+          path: ~/ReactNativeLoginScreen
+
+      - attach_workspace:
+          at: ~/ReactNativeLoginScreen
+
+      - run: bundle install
+
+workflows:
+  version: 2
+  node-android-ios:
+    jobs:
+      - node
+      - android:
+          requires:
+            - node
