@@ -14,7 +14,6 @@ import {SuccesErrorMessage} from './LoginScreen/succesAndErrorMessage';
 interface ChangePasswordProps {}
 
 export const ChangePassword: React.FC<ChangePasswordProps> = () => {
-  const navigation = useNavigation();
   const [login, loginSet] = useState('');
   const [password, passwordSet] = useState('');
   const [newPassword, newPasswordSet] = useState('');
