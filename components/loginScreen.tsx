@@ -11,9 +11,9 @@ import {EntryScreenHeader} from './LoginScreen/header';
 import {EntryScreenFooter} from './LoginScreen/footer';
 import {MainText} from './LoginScreen/mainText';
 import {SuccesErrorMessage} from './LoginScreen/succesAndErrorMessage';
-interface LoginScreenProps {}
+// interface LoginScreenProps {}
 
-export const LoginScreen: React.FC<LoginScreenProps> = () => {
+export const LoginScreen: React.FC = () => {
   const navigation = useNavigation();
   const [loginName, loginNameSet] = useState('');
   const [loginPassword, loginPasswordSet] = useState('');

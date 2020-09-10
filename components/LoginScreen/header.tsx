@@ -3,9 +3,9 @@ import {Header} from 'native-base';
 import {StyleSheet} from 'react-native';
 import {ApplicationLogo} from './applicationLogo';
 
-interface HeaderProps {}
+// interface HeaderProps {}
 
-export const EntryScreenHeader: React.FC<HeaderProps> = () => {
+export const EntryScreenHeader: React.FC = () => {
   return (
     <Header style={styles.header}>
       <ApplicationLogo></ApplicationLogo>

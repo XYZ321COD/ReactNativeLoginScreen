@@ -11,9 +11,9 @@ import SIGNUP_QUERY from '../queries/SIGNUP_QUERY';
 import {MainText} from './LoginScreen/mainText';
 import {SuccesErrorMessage} from './LoginScreen/succesAndErrorMessage';
 
-interface SingUpScreenProps {}
+// interface SingUpScreenProps {}
 
-export const SingUpScreen: React.FC<SingUpScreenProps> = () => {
+export const SingUpScreen: React.FC = () => {
   const [signUpName, signUpNameSet] = useState('');
   const [signUpPassword, signUpPasswordSet] = useState('');
   const [signUpPasswordConfirm, signUpPasswordConfirmSet] = useState('');

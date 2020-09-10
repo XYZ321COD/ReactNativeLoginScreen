@@ -1,9 +1,9 @@
 import React from 'react';
 
 import {View, Image, StyleSheet} from 'react-native';
-interface ApplicationLogoProps {}
+// interface ApplicationLogoProps {}
 
-export const ApplicationLogo: React.FC<ApplicationLogoProps> = ({}) => {
+export const ApplicationLogo: React.FC = ({}) => {
   return (
     <View style={styles.logoContainer}>
       <Image

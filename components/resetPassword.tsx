@@ -11,9 +11,9 @@ import {MainText} from './LoginScreen/mainText';
 import {EntryScreenFooter} from './LoginScreen/footer';
 import {SuccesErrorMessage} from './LoginScreen/succesAndErrorMessage';
 
-interface ResetPasswordProps {}
+// interface ResetPasswordProps {}
 
-export const ResetPassword: React.FC<ResetPasswordProps> = () => {
+export const ResetPassword: React.FC = () => {
   const navigation = useNavigation();
   const [signUpEmail, signUpEmailSet] = useState('');
   const [queryRespond, queryRespondSet] = useState('');

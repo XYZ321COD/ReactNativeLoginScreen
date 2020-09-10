@@ -11,9 +11,9 @@ import {useMutation} from '@apollo/client';
 import CHANGE_PASSWORD from '../queries/CHANGE_PASSWORD_QUERY';
 import {SuccesErrorMessage} from './LoginScreen/succesAndErrorMessage';
 
-interface ChangePasswordProps {}
+// interface ChangePasswordProps {}
 
-export const ChangePassword: React.FC<ChangePasswordProps> = () => {
+export const ChangePassword: React.FC = () => {
   const [login, loginSet] = useState('');
   const [password, passwordSet] = useState('');
   const [newPassword, newPasswordSet] = useState('');
