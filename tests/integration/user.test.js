@@ -107,3 +107,7 @@ describe('Simulating logging with valid credentials', () => {
       });
   }, 10000);
 });
+
+afterAll(() => {
+  client.stop();
+});
