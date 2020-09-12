@@ -16,7 +16,7 @@ beforeAll(async () => {
 });
 describe('Simulating logging with empty username', () => {
   test('Login-1', async () => {
-    await client
+    client
       .mutate({
         mutation: gql`
           mutation testLoginQueryEmptyFieldUsername {
@@ -36,7 +36,7 @@ describe('Simulating logging with empty username', () => {
 });
 describe('Simulating logging with empty password', () => {
   test('Login-2', async () => {
-    await client
+    client
       .mutate({
         mutation: gql`
           mutation testLoginQueryEmptyFieldPassword {
@@ -56,7 +56,7 @@ describe('Simulating logging with empty password', () => {
 });
 describe('Simulating logging with wrong credentials', () => {
   test('Login-3', async () => {
-    await client
+    client
       .mutate({
         mutation: gql`
           mutation testLoginQueryEmptyFieldPassword {
@@ -83,7 +83,7 @@ describe('Simulating logging with wrong credentials', () => {
 
 describe('Simulating logging with valid credentials', () => {
   test('Login-3', async () => {
-    await client
+    client
       .mutate({
         mutation: gql`
           mutation testLoginQueryEmptyFieldPassword {
