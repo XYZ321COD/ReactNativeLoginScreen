@@ -33,4 +33,4 @@ Spotties is a mobile application created for skateboarders. The guiding principl
 
 - `Apollo Server/Client`
 
-- `Prisma - ORM`
+- `Prisma` - ORM
