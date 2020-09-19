@@ -13,10 +13,26 @@ beforeAll(async () => {
     }),
     cache: new InMemoryCache(),
   });
+  await client.mutate({
+    mutation: gql`
+      mutation createUser {
+        signup(
+          registerData: {
+            login: "TestingUserName"
+            password: "12312"
+            confirmPassword: "12312"
+            mail: "Testing@gmail.com"
+          }
+        ) {
+          token
+        }
+      }
+    `,
+  });
 });
 describe('Simulating logging with empty username', () => {
   test('Login-1', async () => {
-    client
+    await client
       .mutate({
         mutation: gql`
           mutation testLoginQueryEmptyFieldUsername {
@@ -36,7 +52,7 @@ describe('Simulating logging with empty username', () => {
 });
 describe('Simulating logging with empty password', () => {
   test('Login-2', async () => {
-    client
+    await client
       .mutate({
         mutation: gql`
           mutation testLoginQueryEmptyFieldPassword {
@@ -56,10 +72,10 @@ describe('Simulating logging with empty password', () => {
 });
 describe('Simulating logging with wrong credentials', () => {
   test('Login-3', async () => {
-    client
+    await client
       .mutate({
         mutation: gql`
-          mutation testLoginQueryEmptyFieldPassword {
+          mutation testLoginNonValid {
             login(
               loginData: {
                 login: "WrongCredentials"
@@ -82,15 +98,15 @@ describe('Simulating logging with wrong credentials', () => {
 });
 
 describe('Simulating logging with valid credentials', () => {
-  test('Login-3', async () => {
-    client
+  test('Login-4', async () => {
+    await client
       .mutate({
         mutation: gql`
-          mutation testLoginQueryEmptyFieldPassword {
+          mutation testLoginValid {
             login(
               loginData: {
                 login: "MichalZnalezniak2"
-                password: "1234"
+                password: "ZOP10Rnz"
                 mail: ""
               }
             ) {
@@ -100,14 +116,71 @@ describe('Simulating logging with valid credentials', () => {
         `,
       })
       .then((result) => {
-        expect(result).toBeUndefined();
-      })
-      .catch((error) => {
-        error;
+        expect(result).toBeDefined();
       });
   }, 10000);
 });
 
-afterAll(() => {
+afterAll(async () => {
+  await client.mutate({
+    mutation: gql`
+      mutation deleteUser {
+        deleteUser(Login: "TestingUserName")
+      }
+    `,
+  });
   client.stop();
+});
+
+describe('Simulating reseting password with wrong email', () => {
+  test('Reset Password - 1', async () => {
+    await client
+      .mutate({
+        mutation: gql`
+          mutation resetPassword {
+            resetPassword(Mail: "asdasd@gmail.com")
+          }
+        `,
+      })
+      .then((result) => result)
+      .catch((error) => {
+        expect(error.graphQLErrors[0].extensions.errors.email).toBe(
+          'No such user found for Email: asdasd@gmail.com',
+        );
+      });
+  }, 10000);
+});
+
+describe('Simulating reseting password with wrong email pattern', () => {
+  test('Reset Password - 2', async () => {
+    await client
+      .mutate({
+        mutation: gql`
+          mutation resetPassword {
+            resetPassword(Mail: "asdasd.com")
+          }
+        `,
+      })
+      .then((result) => result)
+      .catch((error) => {
+        expect(error.graphQLErrors[0].extensions.errors.email).toBe(
+          'Email must be a valid email address',
+        );
+      });
+  }, 10000);
+});
+describe('Simulating reseting password with valid email', () => {
+  test('Reset Password - 3', async () => {
+    await client
+      .mutate({
+        mutation: gql`
+          mutation resetPassword {
+            resetPassword(Mail: "Testing@gmail.com")
+          }
+        `,
+      })
+      .then((result) => {
+        expect(result.data.resetPassword).toBe('Sucessfully reset password');
+      });
+  }, 10000);
 });
