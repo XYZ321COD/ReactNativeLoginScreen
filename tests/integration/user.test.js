@@ -137,24 +137,6 @@ describe('Simulating logging with valid credentials', () => {
   }, 10000);
 });
 
-afterAll(async () => {
-  await client.mutate({
-    mutation: gql`
-      mutation deleteUser {
-        deleteUser(Login: "TestingUserName")
-      }
-    `,
-  });
-  await client.mutate({
-    mutation: gql`
-      mutation deleteUser {
-        deleteUser(Login: "TestingUserName2")
-      }
-    `,
-  });
-  client.stop();
-});
-
 describe('Simulating reseting password with wrong email', () => {
   test('Reset Password - 1', async () => {
     await client
@@ -612,4 +594,22 @@ describe('Simulating changing password with  valid credentials', () => {
         error;
       });
   }, 10000);
+});
+
+afterAll(async () => {
+  await client.mutate({
+    mutation: gql`
+      mutation deleteUser {
+        deleteUser(Login: "TestingUserName")
+      }
+    `,
+  });
+  await client.mutate({
+    mutation: gql`
+      mutation deleteUser {
+        deleteUser(Login: "TestingUserName2")
+      }
+    `,
+  });
+  client.stop();
 });
