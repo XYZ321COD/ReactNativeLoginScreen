@@ -184,3 +184,214 @@ describe('Simulating reseting password with valid email', () => {
       });
   }, 10000);
 });
+
+describe('Simulating signup with empty username', () => {
+  test('Singup - 1', async () => {
+    await client
+      .mutate({
+        mutation: gql`
+          mutation SignUp {
+            signup(
+              registerData: {
+                login: ""
+                password: "123"
+                confirmPassword: "123"
+                mail: "mzTest@gmail.com"
+              }
+            ) {
+              token
+            }
+          }
+        `,
+      })
+      .then((result) => {
+        result;
+      })
+      .catch((error) => {
+        expect(error.graphQLErrors[0].extensions.errors.username).toBe(
+          'Username must not be empty',
+        );
+      });
+  }, 10000);
+});
+
+describe('Simulating signup with empty password', () => {
+  test('Singup - 2', async () => {
+    await client
+      .mutate({
+        mutation: gql`
+          mutation SignUp {
+            signup(
+              registerData: {
+                login: "michalTest"
+                password: ""
+                confirmPassword: "123"
+                mail: "mzTest@gmail.com"
+              }
+            ) {
+              token
+            }
+          }
+        `,
+      })
+      .then((result) => {
+        result;
+      })
+      .catch((error) => {
+        expect(error.graphQLErrors[0].extensions.errors.password).toBe(
+          'Password must not empty',
+        );
+      });
+  }, 10000);
+});
+
+describe('Simulating signup with no matching passwords', () => {
+  test('Singup - 3', async () => {
+    await client
+      .mutate({
+        mutation: gql`
+          mutation SignUp {
+            signup(
+              registerData: {
+                login: "michalTest"
+                password: "321"
+                confirmPassword: "123"
+                mail: "mzTest@gmail.com"
+              }
+            ) {
+              token
+            }
+          }
+        `,
+      })
+      .then((result) => {
+        result;
+      })
+      .catch((error) => {
+        expect(error.graphQLErrors[0].extensions.errors.confirmPassword).toBe(
+          'Passwords must match',
+        );
+      });
+  }, 10000);
+});
+
+describe('Simulating signup with not valid email', () => {
+  test('Singup - 4', async () => {
+    await client
+      .mutate({
+        mutation: gql`
+          mutation SignUp {
+            signup(
+              registerData: {
+                login: "michalTest"
+                password: "321"
+                confirmPassword: "321"
+                mail: "mzTest.com"
+              }
+            ) {
+              token
+            }
+          }
+        `,
+      })
+      .then((result) => {
+        result;
+      })
+      .catch((error) => {
+        expect(error.graphQLErrors[0].extensions.errors.email).toBe(
+          'Email must be a valid email address',
+        );
+      });
+  }, 10000);
+});
+
+describe('Simulating signup with valid credentails', () => {
+  test('Singup - 5', async () => {
+    await client
+      .mutate({
+        mutation: gql`
+          mutation SignUp {
+            signup(
+              registerData: {
+                login: "michal2"
+                password: "321"
+                confirmPassword: "321"
+                mail: "mz2@gmail.com"
+              }
+            ) {
+              token
+            }
+          }
+        `,
+      })
+      .then((result) => {
+        expect(result.data.signup.token).toBeDefined();
+        client.mutate({
+          mutation: gql`
+            mutation deleteUser {
+              deleteUser(Login: "michal2")
+            }
+          `,
+        });
+      })
+      .catch((error) => {
+        error;
+      });
+  }, 10000);
+});
+
+describe('Simulating signup with taken username', () => {
+  test('Singup - 6', async () => {
+    await client
+      .mutate({
+        mutation: gql`
+          mutation SignUp {
+            signup(
+              registerData: {
+                login: "TestingUserName"
+                password: "3212"
+                confirmPassword: "3212"
+                mail: "mz2@gmail.com"
+              }
+            ) {
+              token
+            }
+          }
+        `,
+      })
+      .then((result) => {
+        result;
+      })
+      .catch((error) => {
+        expect(error.graphQLErrors[0].message).toBe('Login is taken');
+      });
+  }, 10000);
+});
+
+describe('Simulating signup with taken email', () => {
+  test('Singup - 7', async () => {
+    await client
+      .mutate({
+        mutation: gql`
+          mutation SignUp {
+            signup(
+              registerData: {
+                login: "TestingUserNameName"
+                password: "3212"
+                confirmPassword: "3212"
+                mail: "Testing@gmail.com"
+              }
+            ) {
+              token
+            }
+          }
+        `,
+      })
+      .then((result) => {
+        result;
+      })
+      .catch((error) => {
+        expect(error.graphQLErrors[0].message).toBe('Email is taken');
+      });
+  }, 10000);
+});
