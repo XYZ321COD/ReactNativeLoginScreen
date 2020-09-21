@@ -29,6 +29,22 @@ beforeAll(async () => {
       }
     `,
   });
+  await client.mutate({
+    mutation: gql`
+      mutation createUser {
+        signup(
+          registerData: {
+            login: "TestingUserName2"
+            password: "12312"
+            confirmPassword: "12312"
+            mail: "Testing2@gmail.com"
+          }
+        ) {
+          token
+        }
+      }
+    `,
+  });
 });
 describe('Simulating logging with empty username', () => {
   test('Login-1', async () => {
@@ -126,6 +142,13 @@ afterAll(async () => {
     mutation: gql`
       mutation deleteUser {
         deleteUser(Login: "TestingUserName")
+      }
+    `,
+  });
+  await client.mutate({
+    mutation: gql`
+      mutation deleteUser {
+        deleteUser(Login: "TestingUserName2")
       }
     `,
   });
@@ -392,6 +415,201 @@ describe('Simulating signup with taken email', () => {
       })
       .catch((error) => {
         expect(error.graphQLErrors[0].message).toBe('Email is taken');
+      });
+  }, 10000);
+});
+
+describe('Simulating chaning password with empty username', () => {
+  test('Change Password - 1', async () => {
+    await client
+      .mutate({
+        mutation: gql`
+          mutation changePassword {
+            changePassword(
+              changePasswordData: {
+                login: ""
+                password: "321"
+                confirmNewPassword: "321"
+                newPassword: "123"
+              }
+            )
+          }
+        `,
+      })
+      .then((result) => {
+        result;
+      })
+      .catch((error) => {
+        expect(error.graphQLErrors[0].extensions.errors.username).toBe(
+          'Username must not be empty',
+        );
+      });
+  }, 10000);
+});
+
+describe('Simulating changing password with empty password', () => {
+  test('Change Password - 2', async () => {
+    await client
+      .mutate({
+        mutation: gql`
+          mutation changePassword {
+            changePassword(
+              changePasswordData: {
+                login: "michal"
+                password: ""
+                confirmNewPassword: "321"
+                newPassword: "123"
+              }
+            )
+          }
+        `,
+      })
+      .then((result) => {
+        result;
+      })
+      .catch((error) => {
+        expect(error.graphQLErrors[0].extensions.errors.password).toBe(
+          'Password must not be empty',
+        );
+      });
+  }, 10000);
+});
+
+describe('Simulating changing password with empty new Password', () => {
+  test('Change Password - 3', async () => {
+    await client
+      .mutate({
+        mutation: gql`
+          mutation changePassword {
+            changePassword(
+              changePasswordData: {
+                login: "michal"
+                password: "321"
+                confirmNewPassword: "321"
+                newPassword: ""
+              }
+            )
+          }
+        `,
+      })
+      .then((result) => {
+        result;
+      })
+      .catch((error) => {
+        expect(error.graphQLErrors[0].extensions.errors.newPassword).toBe(
+          'New password must not be empty',
+        );
+      });
+  }, 10000);
+});
+
+describe('Simulating changing password with empty new Password', () => {
+  test('Change Password - 3', async () => {
+    await client
+      .mutate({
+        mutation: gql`
+          mutation changePassword {
+            changePassword(
+              changePasswordData: {
+                login: "michal"
+                password: "321"
+                confirmNewPassword: "321"
+                newPassword: ""
+              }
+            )
+          }
+        `,
+      })
+      .then((result) => {
+        result;
+      })
+      .catch((error) => {
+        expect(error.graphQLErrors[0].extensions.errors.newPassword).toBe(
+          'New password must not be empty',
+        );
+      });
+  }, 10000);
+});
+
+describe('Simulating changing password with no matching new passwords', () => {
+  test('Change Password - 3', async () => {
+    await client
+      .mutate({
+        mutation: gql`
+          mutation changePassword {
+            changePassword(
+              changePasswordData: {
+                login: "michal"
+                password: "321"
+                confirmNewPassword: "123"
+                newPassword: "321"
+              }
+            )
+          }
+        `,
+      })
+      .then((result) => {
+        result;
+      })
+      .catch((error) => {
+        expect(error.graphQLErrors[0].extensions.errors.confirmPassword).toBe(
+          'Passwords must match',
+        );
+      });
+  }, 10000);
+});
+
+describe('Simulating changing password with no valid credentials', () => {
+  test('Change Password - 4', async () => {
+    await client
+      .mutate({
+        mutation: gql`
+          mutation changePassword {
+            changePassword(
+              changePasswordData: {
+                login: "MichalZnalezniak2"
+                password: "michalznalezniak22"
+                confirmNewPassword: "123"
+                newPassword: "123"
+              }
+            )
+          }
+        `,
+      })
+      .then((result) => {
+        result;
+      })
+      .catch((error) => {
+        expect(error.graphQLErrors[0].extensions.errors.password).toBe(
+          'Invalid Password',
+        );
+      });
+  }, 10000);
+});
+
+describe('Simulating changing password with  valid credentials', () => {
+  test('Change Password - 4', async () => {
+    await client
+      .mutate({
+        mutation: gql`
+          mutation changePassword {
+            changePassword(
+              changePasswordData: {
+                login: "TestingUserName2"
+                password: "12312"
+                confirmNewPassword: "123122"
+                newPassword: "123122"
+              }
+            )
+          }
+        `,
+      })
+      .then((result) => {
+        expect(result.data.changePassword).toBe('Sucessfully change password');
+        result;
+      })
+      .catch((error) => {
+        error;
       });
   }, 10000);
 });
